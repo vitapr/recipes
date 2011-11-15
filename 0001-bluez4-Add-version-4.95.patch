@@ -1,0 +1,51 @@
+From 1e576823a583f5aaf409b9ed911af71e642095eb Mon Sep 17 00:00:00 2001
+From: Vita Preskovsky <vitap@ti.com>
+Date: Mon, 14 Nov 2011 16:08:13 +0200
+Subject: [PATCHv2] bluez4: Add version 4.95
+ Signed-off-by: Vita Preskovsky <vitap@ti.com>
+ Adds new recipe that builds bluez-4.95 package
+
+---
+ recipes/bluez/bluez4_4.95.bb |   30 ++++++++++++++++++++++++++++++
+ 1 files changed, 30 insertions(+), 0 deletions(-)
+ create mode 100644 recipes/bluez/bluez4_4.95.bb
+
+diff --git a/recipes/bluez/bluez4_4.95.bb b/recipes/bluez/bluez4_4.95.bb
+new file mode 100644
+index 0000000..290dff6
+--- /dev/null
++++ b/recipes/bluez/bluez4_4.95.bb
+@@ -0,0 +1,30 @@
++require bluez4.inc
++
++SRC_URI = "\
++  ${KERNELORG_MIRROR}/pub/linux/bluetooth/bluez-${PV}.tar.gz \
++  file://bluetooth.conf \
++"
++SRC_URI[md5sum] = "341294b2849a04a4afff5c96bfbf30b2"
++SRC_URI[sha256sum] = "d6ea9de410fc2bcd2620d709c2202893b218e2e6a55c3c0ce6bebd27fa4120f6"
++
++DEFAULT_PREFERENCE = "-1"
++DEFAULT_PREFERENCE_angstrom = "1"
++
++DEPENDS += "libsndfile1"
++
++PR = "${INC_PR}.0"
++
++# Not all distros have a recent enough udev
++BTUDEV = " --disable-udevrules"
++BTUDEV_angstrom = " --enable-udevrules"
++BTUDEV_shr = " --enable-udevrules"
++
++EXTRA_OECONF += "${BTUDEV}"
++do_configure_append(){
++	echo "#define LIBUDEV_I_KNOW_THE_API_IS_SUBJECT_TO_CHANGE" >> ${S}/config.h
++}
++
++FILES_${PN}-dbg += "\
++  ${base_libdir}/udev/.debug \
++  ${libdir}/*/.debug \
++"
+-- 
+1.7.0.4
+
